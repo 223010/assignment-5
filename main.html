@@ -1,11 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    Hello
-</body>
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Github Issue Tracker | Mohammed Jane Alam </title>
+    <link
+      rel="shortcut icon"
+      href="./assets/Aperture.png"
+      type="image/x-icon"
+    />
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- DAISYUI + TAILWINDCSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- FONTAWESOME -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- AUTHENTICATION SCRIPT -->
+    <script src="./scripts/auth.js"></script>
+  </head>
+  <!-- MAIN PAGE -->
+  <body
+    class="font-geist text-sm text-neutral font-normal bg-base-200 w-full pt-[120px] sm:pt-20 min-h-screen"
+  >
+    <!-- Header -->
+    <header
+      class="navbar bg-base-100 shadow-sm fixed top-0 left-0 w-full z-50 flex-col items-center gap-4 sm:flex-row"
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl w-fit flex items-center gap-1.5">
+          <img src="./assets/github-logo.png" alt="GitHub Logo" class="w-9" />
+          GitHub Issues Tracker
+        </a>
+      </div>
+      <div class="flex gap-3">
+        <form id="search-form" class="flex gap-2 w-full md:w-sm">
+          <input
+            type="search"
+            name="search"
+            placeholder="Search"
+            id="search"
+            class="input input-bordered w-full"
+          />
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+
+        <div class="dropdown dropdown-end">
+          <div
+            tabindex="0"
+            role="button"
+            class="btn btn-ghost btn-circle avatar"
+          >
+            <div class="w-10 rounded-full">
+              <img
+                alt="Admin DP"
+                src="https://avatars.githubusercontent.com/u/86876920?v=4"
+              />
+            </div>
+          </div>
+          <ul
+            tabindex="-1"
+            class="menu menu-md border border-base-300 dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow"
+          >
+            <li>Signed in as Admin</li>
+            <li class="bg-error/20 text-error font-medium text-sm mt-2">
+              <button id="logout-btn">Sign Out</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex flex-col gap-4 p-3 container">
+      <!-- Tabs -->
+      <section
+        id="tabs-container"
+        class="w-full bg-base-100 p-5 rounded-sm flex flex-wrap gap-3 items-center shadow-sm"
+      >
+        <button class="tab-btn active" data-tab="">All</button>
+        <button class="tab-btn" data-tab="open">Open</button>
+        <button class="tab-btn" data-tab="closed">Closed</button>
+      </section>
+
+      <div>
+        <!-- Issues Stats -->
+        <section
+          class="w-full bg-base-100 p-5 rounded-t-sm flex flex-row gap-3 justify-between items-center shadow-sm border-b border-base-300"
+        >
+          <div class="flex gap-2 items-center">
+            <span
+              class="w-10 aspect-square rounded-full bg-purple-100 grid place-content-center"
+              ><img src="./assets/Aperture.png" alt="Open issue" class="w-6"
+            /></span>
+
+            <div>
+              <span class="text-xl font-semibold"
+                ><span id="issue-counter">50</span> Issues</span
+              >
+              <p class="text-neutral/60">
+                Track and manage your project issues
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-center">
+            <div class="flex items-center gap-1 font-medium">
+              <span
+                class="block w-2.5 aspect-square rounded-full bg-green-600 mr-1"
+              ></span>
+              Open
+            </div>
+            <div class="flex items-center gap-1 font-medium">
+              <span
+                class="block w-2.5 aspect-square rounded-full bg-purple-600 mr-1"
+              ></span>
+              Closed
+            </div>
+          </div>
+        </section>
+
+        <section class="w-full bg-base-100/60 p-5 rounded-b-sm shadow-sm">
+          <span
+            id="spinner"
+            class="loading loading-spinner loading-sm py-20 mx-auto block"
+          ></span>
+
+          <div
+            id="issue-cards-container"
+            class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 hidden"
+            data-theme="corporate"
+          ></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Detailed Issue Modal -->
+    <dialog id="issue_modal" class="modal">
+      <div class="modal-box">
+        <h3 id="issue_modal_title" class="text-lg font-semibold"></h3>
+
+        <span
+          id="modal-spinner"
+          class="loading loading-spinner loading-sm py-20 mx-auto block"
+        ></span>
+
+        <div
+          id="issue_modal_content"
+          data-theme="corporate"
+          class="mt-3 flex flex-col gap-5"
+        ></div>
+
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn btn-primary">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+  
+  </body>
 </html>
