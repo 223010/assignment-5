@@ -1,4 +1,4 @@
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("isLoggedIn");
-  window.location.assign("./index.html");
+  window.location.assign("/assignment-5/");
 });

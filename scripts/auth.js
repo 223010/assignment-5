@@ -1,4 +1,4 @@
 if (localStorage.getItem("isLoggedIn") !== "true") {
-  alert("Please sign in to continue");
-  window.location.assign("./index.html");
+  alert("Please Login First");
+  window.location.assign("/assignment-5/");
 }
